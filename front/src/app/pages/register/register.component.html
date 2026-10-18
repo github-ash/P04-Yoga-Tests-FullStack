@@ -6,20 +6,52 @@
         <form class="register-form" [formGroup]="form" (ngSubmit)="submit()">
             <mat-card-content fxLayout="column">
                 <mat-form-field fxFlex>
-                    <input matInput placeholder="First name" formControlName="firstName">
+                    <input matInput placeholder="First name" formControlName="firstName"
+                           [attr.aria-invalid]="form.controls.firstName.invalid && form.controls.firstName.touched">
+                    @if (form.controls.firstName.touched && form.controls.firstName.hasError('required')) {
+                      <mat-error>First name is required.</mat-error>
+                    } @else if (form.controls.firstName.touched && form.controls.firstName.hasError('minlength')) {
+                      <mat-error>First name must be at least 3 characters.</mat-error>
+                    } @else if (form.controls.firstName.touched && form.controls.firstName.hasError('maxlength')) {
+                      <mat-error>First name must be 20 characters or fewer.</mat-error>
+                    }
                 </mat-form-field>
                 <mat-form-field fxFlex>
-                    <input matInput placeholder="Last name" formControlName="lastName">
+                    <input matInput placeholder="Last name" formControlName="lastName"
+                           [attr.aria-invalid]="form.controls.lastName.invalid && form.controls.lastName.touched">
+                    @if (form.controls.lastName.touched && form.controls.lastName.hasError('required')) {
+                      <mat-error>Last name is required.</mat-error>
+                    } @else if (form.controls.lastName.touched && form.controls.lastName.hasError('minlength')) {
+                      <mat-error>Last name must be at least 3 characters.</mat-error>
+                    } @else if (form.controls.lastName.touched && form.controls.lastName.hasError('maxlength')) {
+                      <mat-error>Last name must be 20 characters or fewer.</mat-error>
+                    }
                 </mat-form-field>
                 <mat-form-field fxFlex>
-                    <input matInput placeholder="Email" formControlName="email">
+                    <input matInput placeholder="Email" formControlName="email"
+                           [attr.aria-invalid]="form.controls.email.invalid && form.controls.email.touched">
+                    @if (form.controls.email.touched && form.controls.email.hasError('required')) {
+                      <mat-error>Email is required.</mat-error>
+                    } @else if (form.controls.email.touched && form.controls.email.hasError('email')) {
+                      <mat-error>Enter a valid email address.</mat-error>
+                    }
                 </mat-form-field>
                 <mat-form-field fxFlex>
-                    <input matInput placeholder="Password" formControlName="password">
+                    <input matInput type="password" placeholder="Password" formControlName="password"
+                           [attr.aria-invalid]="form.controls.password.invalid && form.controls.password.touched">
+                    @if (form.controls.password.touched && form.controls.password.hasError('required')) {
+                      <mat-error>Password is required.</mat-error>
+                    } @else if (form.controls.password.touched && form.controls.password.hasError('minlength')) {
+                      <mat-error>Password must be at least 3 characters.</mat-error>
+                    } @else if (form.controls.password.touched && form.controls.password.hasError('maxlength')) {
+                      <mat-error>Password must be 40 characters or fewer.</mat-error>
+                    }
                 </mat-form-field>
             </mat-card-content>
             <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Submit</button>
-            <span *ngIf="onError" class="error ml2">An error occurred</span>
+            @if (onError) {
+              <span class="error ml2">An error occurred</span>
+            }
         </form>
     </mat-card>
 </div>

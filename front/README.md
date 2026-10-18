@@ -1,48 +1,34 @@
-# Yoga
+# Yoga frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.16.
+This frontend is built with Angular 19.
 
-## Start the project
+## Setup and development
 
-Git clone:
+Install the locked dependencies from this directory:
 
-> git clone https://github.com/OpenClassrooms-Student-Center/P5-Full-Stack-testing
+```sh
+npm ci
+npm start
+```
 
-Go inside folder:
+Create a production build with `npm run build`.
 
-> cd yoga
+## Unit and integration tests
 
-Install dependencies:
+Run Jest with `npm test -- --runInBand`. For the coverage-enforced run, use:
 
-> npm install
+```sh
+npm run test:coverage
+```
 
-Launch Front-end:
+Jest enforces at least 80% statements, branches, functions, and lines. Its
+report is written to `coverage/jest`. Coverage includes the application
+services, guards, interceptor, routes, and components. Type-only model
+interfaces and the static Material module barrel are excluded because they
+contain no independently executable application behavior; CLI bootstrap and
+polyfills are outside `src/app`.
 
-> npm run start;
+## End-to-end tests
 
-
-### Test
-
-#### E2E
-
-Launching e2e test:
-
-> npm run e2e
-
-Generate coverage report (you should launch e2e test before):
-
-> npm run e2e:coverage
-
-Report is available here:
-
-> front/coverage/lcov-report/index.html
-
-#### Unitary test
-
-Launching test:
-
-> npm run test
-
-for following change:
-
-> npm run test:watch
+Run Cypress with `npm run cypress:run` or `npm run e2e:ci`. After an E2E run,
+generate and check the NYC report with `npm run e2e:coverage`.

@@ -5,38 +5,63 @@
         <button mat-icon-button routerLink="/sessions">
           <mat-icon>arrow_back</mat-icon>
         </button>
-        <h1 *ngIf="!onUpdate">Create session</h1>
-        <h1 *ngIf="onUpdate">Update session</h1>
+        @if (onUpdate) {
+        <h1>Update session</h1>
+        } @else {
+        <h1>Create session</h1>
+        }
       </div>
     </mat-card-title>
-    <mat-card-content *ngIf="sessionForm">
-      <form class="mt2" fxLayout="column" [formGroup]="sessionForm" (ngSubmit)="submit()">
+    @if (sessionForm; as form) {
+    <mat-card-content>
+      <form class="mt2" fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
         <mat-form-field appearance="outline" class="" fxFlex>
           <mat-label>Name</mat-label>
-          <input matInput formControlName="name">
+          <input matInput formControlName="name"
+                 [attr.aria-invalid]="form.controls['name'].invalid && form.controls['name'].touched">
+          @if (form.controls['name'].touched && form.controls['name'].hasError('required')) {
+            <mat-error>Name is required.</mat-error>
+          }
         </mat-form-field>
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Date</mat-label>
-          <input matInput type="date" formControlName="date">
+          <input matInput type="date" formControlName="date"
+                 [attr.aria-invalid]="form.controls['date'].invalid && form.controls['date'].touched">
+          @if (form.controls['date'].touched && form.controls['date'].hasError('required')) {
+            <mat-error>Date is required.</mat-error>
+          }
         </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>Teacher</mat-label>
-          <mat-select ngDefaultControl formControlName="teacher_id">
-            <mat-option *ngFor="let teacher of teachers$ | async" [value]="teacher.id">
+          <mat-select ngDefaultControl formControlName="teacher_id"
+                      [attr.aria-invalid]="form.controls['teacher_id'].invalid && form.controls['teacher_id'].touched">
+            @for (teacher of (teachers$ | async); track teacher.id) {
+            <mat-option [value]="teacher.id">
               {{teacher.firstName}} {{teacher.lastName}}
             </mat-option>
+            }
           </mat-select>
+          @if (form.controls['teacher_id'].touched && form.controls['teacher_id'].hasError('required')) {
+            <mat-error>Select a teacher.</mat-error>
+          }
         </mat-form-field>
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Description</mat-label>
-          <textarea matInput rows="8" formControlName="description"></textarea>
+          <textarea matInput rows="8" formControlName="description"
+                    [attr.aria-invalid]="form.controls['description'].invalid && form.controls['description'].touched"></textarea>
+          @if (form.controls['description'].touched && form.controls['description'].hasError('required')) {
+            <mat-error>Description is required.</mat-error>
+          } @else if (form.controls['description'].touched && form.controls['description'].hasError('maxlength')) {
+            <mat-error>Description must be 2000 characters or fewer.</mat-error>
+          }
         </mat-form-field>
         <div fxLayout="row" fxLayoutAlign="center center">
-          <button mat-raised-button color="primary" type="submit" [disabled]="sessionForm.invalid">
+          <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
             Save
           </button>
         </div>
       </form>
     </mat-card-content>
+    }
   </mat-card>
 </div>
