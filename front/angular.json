@@ -67,6 +67,8 @@
               "namedChunks": true
             },
             "e2e": {
+              "buildOptimizer": false,
+              "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true,
@@ -81,7 +83,7 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "buildTarget": "project-name:build",
+            "buildTarget": "yoga:build",
             "proxyConfig": "proxy.conf.json"
           },
           "configurations": {
@@ -98,7 +100,8 @@
         "serve-coverage": {
           "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "buildTarget": "yoga:build:e2e"
+            "buildTarget": "yoga:build:e2e",
+            "port": 4307
           }
         },
         "extract-i18n": {
@@ -155,7 +158,7 @@
         "e2e-ci": {
           "builder": "@cypress/schematic:cypress",
           "options": {
-            "browser": "chrome",
+            "browser": "electron",
             "devServerTarget": "yoga:serve-coverage",
             "headless": true,
             "watch": false
