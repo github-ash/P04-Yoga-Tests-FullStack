@@ -1,135 +1,97 @@
-# Yoga App !
+# Yoga App — backend
 
-Backend de l'application Yoga App !.
+API Spring Boot 3.5.5, Java 21, JPA/MySQL, Spring Security/JWT et MapStruct.
+Exécuter les commandes ci-dessous depuis `back`.
 
+## Prérequis et démarrage
 
-## Configuration du back
+- JDK **21** (`JAVA_HOME` doit désigner ce JDK, notamment si Java 26 est installé).
+- Le wrapper télécharge Maven **3.9.11** depuis Maven Central au premier lancement.
+  Une connexion réseau est nécessaire pour ce téléchargement et les dépendances.
+- Docker Desktop et Docker Compose pour le démarrage MySQL de développement.
 
-    - name: back
-    - port: 8080
+PowerShell :
 
-## Pré-requis pour le bon fonctionnement du back :
-
-    -> JDK 21
-    -> Docker
-    -> Docker Compose
-    -> Maven 3.9.3 (https://archive.apache.org/dist/maven/maven-3/3.9.3/binaries/) ou plus
-
-## Démarrage du back
-Pour démarrer le back, il :
-- démarrer Docker-Desktop sur votre poste de travail local.
-- lancer une console, se placer à la racine du projet et exécuter la commande Maven :
-```
-mvn spring-boot:run
-```
-Cette commande va :
-- initialiser le container Docker qui contient la base de données
-- lancer l'application back et le connecter à la base de données précédemment créée
-
-Les traces logs devraient ressemblées à ceci :
-```
-  .   ____          _            __ _ _
- /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
- \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-  '  |____| .__|_| |_|_| |_\__, | / / / /
- =========|_|==============|___/=/_/_/_/
-
- :: Spring Boot ::                (v3.5.5)
-
-[back] [           main] c.o.s.SpringBootSecurityJwtApplication   : Starting SpringBootSecurityJwtApplication using Java 21.0.3 with PID 15152
-[back] [           main] c.o.s.SpringBootSecurityJwtApplication   : No active profile set, falling back to 1 default profile: "default"
-[back] [           main] .s.b.d.c.l.DockerComposeLifecycleManager : Using Docker Compose file E:\dev\workspaces\missionOC\projet-p4\back\compose.yaml
-[back] [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  Container back_mysql  Created
-[back] [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  Container back_mysql  Starting
-[back] [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  Container back_mysql  Started
-[back] [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  Container back_mysql  Waiting
-[back] [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  Container back_mysql  Healthy
-[back] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-[back] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 58 ms. Found 3 JPA repository interfaces.
-[back] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-[back] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-[back] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.44]
-[back] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-[back] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1360 ms
-[back] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-[back] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.26.Final
-[back] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-[back] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-[back] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-[back] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@16cb6f51
-[back] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-[back] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
-	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
-	Database driver: undefined/unknown
-	Database version: 9.1
-	Autocommit mode: undefined/unknown
-	Isolation level: undefined/unknown
-	Minimum pool size: undefined/unknown
-	Maximum pool size: undefined/unknown
-[back] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-[back] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-[back] [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
-[back] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
-[back] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-[back] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
-[back] [           main] c.o.s.SpringBootSecurityJwtApplication   : Started SpringBootSecurityJwtApplication in 10.354 seconds (process running for 11.197)
+```powershell
+$env:JAVA_HOME = 'C:\chemin\vers\jdk-21'
+$env:Path = "$env:JAVA_HOME\bin;$env:Path"
+.\mvnw.cmd --version
+.\mvnw.cmd spring-boot:run
 ```
 
-Sur Docker-Desktop, vous devriez voir apparaître un container MySQL qui correspond au projet.
+Linux/macOS : `sh mvnw spring-boot:run` avec `JAVA_HOME` configuré.
+L'application écoute sur `http://localhost:8080`. Spring Boot utilise
+`compose.yaml` pour démarrer MySQL. Configurer les variables `DB_HOST`,
+`DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` et `TOKEN_SECRET` dans
+l'environnement ou un fichier local `.env` (facultatif, ignoré par Git).
+Ne jamais publier ce fichier ou ses valeurs. `TOKEN_SECRET` doit être une clé
+encodée en Base64, d'au moins 64 octets décodés pour HS512.
 
-![1-docker-desktop](pictures/1-docker-desktop.png)
+Le script `src/main/resources/sql/insert_user.sql` permet d'initialiser le
+compte de démonstration dans la base de développement. Ne pas l'exécuter sur
+une base de production. La collection API est disponible dans
+`postman/yoga.postman_collection.json`.
 
-Vous pouvez vous connecter à la base de données et vérifier que la table ```USERS``` a été créée.
-Pour cela, cliquez sur le lien `back_mysql` ce qui vous amènera sur la vue complète de la base de données.
-Dans l'onglet ```Exec```, il faut :
+## Tests et couverture
 
-1. se connecter à la base de données. Tapez la commande ci-dessous
+```powershell
+# Tests unitaires JUnit 5 / Mockito
+.\mvnw.cmd test
 
-    ```
-    mysql -u user_test -p
-    ```
-   L'invite de commande demandera le mot de passe. Il est : ```test_password```.
+# Reconstruction, tests unitaires, intégration Spring et contrôle JaCoCo
+.\mvnw.cmd clean verify
+```
 
+Les tests n'exigent **ni Docker, ni MySQL, ni `.env`, ni secret réel**.
+Le profil `test`, exclusivement dans `src/test/resources`, configure H2 en
+mode MySQL, un schéma recréé et une clé JWT publique réservée aux tests.
+La configuration MySQL de production reste inchangée.
 
-2. Se connecter au schéma de base de données `test`. Dans l'invite de commande, tapez la commande ci-dessous :
+- Surefire exécute `*Test` : services isolés avec Mockito, mappers réels,
+  JWT (valide, expiré, malformé, non signé, mauvaise signature), filtre et
+  identité utilisateur.
+- Failsafe exécute `*IT` pendant `integration-test` puis valide à `verify`.
+  `ApiIT` charge **tout le contexte Spring**, la véritable chaîne de sécurité,
+  les mappers, services et repositories H2. MockMvc teste les routes sans
+  mocks de service ou repository ; un appel HTTP sur le port aléatoire
+  vérifie également le serveur embarqué réellement démarré.
+- Les scénarios couvrent connexion membre/admin, identifiants incorrects,
+  validations, inscription/doublon et hachage, listes/détails, création,
+  modification, suppression, participation/retrait, compte et propriété de
+  sa suppression, absence de ressources, identifiants invalides, requêtes
+  anonymes et tokens invalides.
+- Les tests d'intégration sont transactionnels : chaque cas est isolé par
+  rollback. Ils ne manipulent pas la base de développement.
 
-    ```
-    use test;
-    ```
+JaCoCo **0.8.13** agrège unitaires et intégration dans
+`target/site/jacoco/index.html` (formats XML et CSV également disponibles).
+`verify` échoue si l'un des six compteurs globaux **instructions, branches,
+lignes, méthodes, classes ou complexité** est inférieur à **80 %**.
+La **seule exclusion de package est `dto`** ; Lombok marque son code généré
+avec `@Generated`, filtré normalement par JaCoCo. Les implémentations
+MapStruct, contrôleurs, services, sécurité, configuration et exceptions ne
+sont pas exclus.
 
-3. Copier le contenu du fichier `ressources/sql/insert_user.sql` et l'exécuter dans l'invite de commande :
+Résultat de référence : **32 tests unitaires et 58 tests d'intégration**,
+soit **64,44 %** de tests d'intégration (minimum demandé : 30 %), sans échec
+ni test ignoré. Les compteurs exacts du dernier lancement sont à lire dans
+le rapport JaCoCo généré ; les rapports JUnit sont dans
+`target/surefire-reports` et `target/failsafe-reports`.
 
-    ```
-    INSERT INTO users(first_name, last_name, admin, email, password) VALUES ('Admin', 'Admin', true, 'yoga@studio.com', '$2a$10$.Hsa/ZjUVaHqi0tp9xieMeewrnZxrZ5pQRzddUXE/WjDu2ZThe6Iq');
-    ```
-   
-3. Vérifier le contenu de la table `users`.
+H2 valide les interactions JPA et les parcours API mais ne remplace pas un
+smoke test MySQL : le démarrage MySQL nécessite un moteur Docker accessible.
 
-    ```
-    select * from users;
-    ```
-   Le résultat devrait afficher les données de l'utilisateur inséré précédemment.
-   
-   Ce script crée l'utilisateur admin par défaut :
+## Améliorations conservant le contrat API
 
-   - login: yoga@studio.com
-   - password: test!1234
-
-La capture d'écran ci-dessous résume les étapes précédentes :
-
-![2-docker-desktop-bdd](pictures/2-docker-desktop-bdd.png)
-
-
-## Ressources
-
-
-### Collection Postman
-
-Importez la collection Postman
-
-> postman/yoga.postman_collection.json
-
-La documentation de Postman se trouve ici :
-
-https://learning.postman.com/docs/getting-started/importing-and-exporting-data/#importing-data-into-postman
+- Gestion centralisée des identifiants invalides par `@RestControllerAdvice` :
+  aucun `try/catch` répété dans les contrôleurs.
+- Authentification/inscription et suppression de son propre compte déléguées
+  aux services ; aucun contrôleur n'accède directement à un repository.
+- Statuts et formats des réponses existants conservés (200, 400, 401, 404).
+  La suppression d'un compte reste réservée à son propriétaire.
+- Relation session/professeur corrigée en `ManyToOne` : plusieurs sessions
+  peuvent être associées au même professeur.
+- Rôle admin propagé dans le principal authentifié ; contrat `equals` /
+  `hashCode` cohérent pour `UserDetailsImpl`.
+- Plugin Spring Boot dédupliqué, wrapper Maven versionné et contrôle de
+  couverture exécuté après les tests d'intégration.

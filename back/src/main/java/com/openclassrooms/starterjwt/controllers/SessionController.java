@@ -1,116 +1,63 @@
 package com.openclassrooms.starterjwt.controllers;
 
-
 import com.openclassrooms.starterjwt.dto.SessionDto;
 import com.openclassrooms.starterjwt.mapper.SessionMapper;
 import com.openclassrooms.starterjwt.models.Session;
 import com.openclassrooms.starterjwt.services.SessionService;
 import jakarta.validation.Valid;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/session")
-@Log4j2
 public class SessionController {
     private final SessionMapper sessionMapper;
     private final SessionService sessionService;
 
-
-    public SessionController(SessionService sessionService,
-                             SessionMapper sessionMapper) {
+    public SessionController(SessionService sessionService, SessionMapper sessionMapper) {
         this.sessionMapper = sessionMapper;
         this.sessionService = sessionService;
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable("id") String id) {
-        try {
-            Session session = this.sessionService.getById(Long.valueOf(id));
-
-            if (session == null) {
-                return ResponseEntity.notFound().build();
-            }
-
-            return ResponseEntity.ok().body(this.sessionMapper.toDto(session));
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<?> findById(@PathVariable("id") Long id) {
+        Session session = sessionService.getById(id);
+        return session == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(sessionMapper.toDto(session));
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<?> findAll() {
-        List<Session> sessions = this.sessionService.findAll();
-
-        return ResponseEntity.ok().body(this.sessionMapper.toDto(sessions));
+        return ResponseEntity.ok(sessionMapper.toDto(sessionService.findAll()));
     }
 
-    @PostMapping()
-    public ResponseEntity<?> create(@Valid @RequestBody SessionDto sessionDto) {
-        log.info(sessionDto);
-
-        Session session = this.sessionService.create(this.sessionMapper.toEntity(sessionDto));
-
-        log.info(session);
-        return ResponseEntity.ok().body(this.sessionMapper.toDto(session));
+    @PostMapping
+    public ResponseEntity<?> create(@Valid @RequestBody SessionDto dto) {
+        return ResponseEntity.ok(sessionMapper.toDto(sessionService.create(sessionMapper.toEntity(dto))));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> update(@PathVariable("id") String id, @Valid @RequestBody SessionDto sessionDto) {
-        try {
-            Session session = this.sessionService.update(Long.parseLong(id), this.sessionMapper.toEntity(sessionDto));
-
-            return ResponseEntity.ok().body(this.sessionMapper.toDto(session));
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<?> update(@PathVariable("id") Long id, @Valid @RequestBody SessionDto dto) {
+        return ResponseEntity.ok(sessionMapper.toDto(sessionService.update(id, sessionMapper.toEntity(dto))));
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> save(@PathVariable("id") String id) {
-        try {
-            Session session = this.sessionService.getById(Long.valueOf(id));
-
-            if (session == null) {
-                return ResponseEntity.notFound().build();
-            }
-
-            this.sessionService.delete(Long.parseLong(id));
-            return ResponseEntity.ok().build();
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().build();
+    public ResponseEntity<?> save(@PathVariable("id") Long id) {
+        if (sessionService.getById(id) == null) {
+            return ResponseEntity.notFound().build();
         }
+        sessionService.delete(id);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("{id}/participate/{userId}")
-    public ResponseEntity<?> participate(@PathVariable("id") String id, @PathVariable("userId") String userId) {
-        try {
-            this.sessionService.participate(Long.parseLong(id), Long.parseLong(userId));
-
-            return ResponseEntity.ok().build();
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<?> participate(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
+        sessionService.participate(id, userId);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("{id}/participate/{userId}")
-    public ResponseEntity<?> noLongerParticipate(@PathVariable("id") String id, @PathVariable("userId") String userId) {
-        try {
-            this.sessionService.noLongerParticipate(Long.parseLong(id), Long.parseLong(userId));
-
-            return ResponseEntity.ok().build();
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<?> noLongerParticipate(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
+        sessionService.noLongerParticipate(id, userId);
+        return ResponseEntity.ok().build();
     }
 }
