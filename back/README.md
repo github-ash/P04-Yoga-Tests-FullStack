@@ -13,6 +13,10 @@ Exécuter les commandes ci-dessous depuis `back`.
 PowerShell :
 
 ```powershell
+Copy-Item .env.example .env
+# Renseigner DB_PASSWORD et TOKEN_SECRET dans .env avant le lancement.
+# Generer deux valeurs differentes avec cette commande (ne pas les versionner) :
+node -e "console.log(require('crypto').randomBytes(64).toString('base64'))"
 $env:JAVA_HOME = 'C:\chemin\vers\jdk-21'
 $env:Path = "$env:JAVA_HOME\bin;$env:Path"
 .\mvnw.cmd --version
@@ -26,6 +30,8 @@ L'application écoute sur `http://localhost:8080`. Spring Boot utilise
 l'environnement ou un fichier local `.env` (facultatif, ignoré par Git).
 Ne jamais publier ce fichier ou ses valeurs. `TOKEN_SECRET` doit être une clé
 encodée en Base64, d'au moins 64 octets décodés pour HS512.
+MySQL genere son mot de passe root ; l'application utilise uniquement
+l'utilisateur du schema configure dans `.env`.
 
 Le script `src/main/resources/sql/insert_user.sql` permet d'initialiser le
 compte de démonstration dans la base de développement. Ne pas l'exécuter sur
