@@ -24,7 +24,7 @@ Ne pas confondre le JDK utilise par Maven avec celui de l'editeur : verifier
    cd P04-Yoga-Tests-FullStack
    ```
 2. Dans `back`, copier `.env.example` en `.env`. Renseigner `DB_PASSWORD`
-   et `TOKEN_SECRET` avec deux valeurs aleatoires differentes, generees
+   ainsi que `DB_ROOT_PASSWORD` et `TOKEN_SECRET` avec trois valeurs aleatoires differentes, generees
    localement, par exemple avec :
 
    ```powershell
@@ -34,7 +34,7 @@ Ne pas confondre le JDK utilise par Maven avec celui de l'editeur : verifier
    `.env` reste local et n'est pas suivi par Git. Spring charge ce fichier
    relativement au repertoire courant : lancer le back depuis `back`.
    Compose cree la base et l'utilisateur MySQL limites au schema choisi.
-   Le mot de passe root est genere par MySQL et n'est pas utilise par l'API.
+   Le mot de passe root reste local dans `DB_ROOT_PASSWORD` et n'est pas utilise par l'API.
    Ne jamais publier de vrais identifiants ou de cle JWT dans Git.
    Voir aussi [le guide du back](back/README.md).
 3. Dans le premier terminal :
@@ -48,7 +48,15 @@ Ne pas confondre le JDK utilise par Maven avec celui de l'editeur : verifier
    `back/src/main/resources/sql/insert_user.sql` dans MySQL pour ajouter
    l'administrateur de demonstration (`yoga@studio.com` / `test!1234`).
    Ce compte est uniquement destine a un environnement local de demonstration.
-   Ajouter au moins un professeur pour pouvoir creer une seance :
+   Le script ajoute aussi un professeur et peut etre rejoue sans dupliquer
+   ces donnees. Depuis `back`, l'executer apres le lancement de l'API :
+
+   ```powershell
+   Get-Content .\src\main\resources\sql\insert_user.sql -Raw |
+       docker compose exec -T mysql sh -c 'MYSQL_PWD=$MYSQL_PASSWORD exec mysql -u$MYSQL_USER $MYSQL_DATABASE'
+   ```
+
+   Pour ajouter manuellement un autre professeur, adapter les valeurs :
 
    ```sql
    INSERT INTO teachers (first_name, last_name, created_at, updated_at)
@@ -178,11 +186,18 @@ Le lint et le build Angular de production sont passes. Le build conserve
 un avertissement de budget : environ 810 ko pour un budget d'avertissement
 de 500 ko, en dessous de la limite d'erreur de 1 Mo.
 
-**Limite de validation de l'environnement :** la configuration Compose a ete
-validee, mais le moteur Docker local ne repondait pas aux commandes de
-connexion. Le lancement de la base MySQL n'a donc pas pu etre confirme.
-Les tests d'integration Spring/H2 et un appel HTTP reel au serveur embarque
-ont bien ete executes ; ils ne sont pas presentes comme un test MySQL.
+**Verification MySQL du 19 octobre 2026 :** apres redemarrage de Windows et
+mise a jour de Docker, le back a demarre avec MySQL. Les quatre tables,
+la connexion administrateur, la lecture des professeurs et la creation,
+relecture, modification et suppression d'une seance ont ete verifies par
+HTTP reel. La seance temporaire a ete supprimee. Le script d'initialisation
+a ete rejoue pour verifier l'absence de doublons. Les tests automatises H2
+restent distincts de cette verification manuelle MySQL.
+
+`MYSQL_RANDOM_ROOT_PASSWORD` n'est pas compatible avec la detection MySQL
+de Spring Boot 3.5.5 : utiliser `DB_ROOT_PASSWORD` dans le fichier local.
+Un volume deja initialise conserve son ancien mot de passe root, meme si
+la variable change ; ne pas supprimer de volume pour appliquer cette valeur.
 
 ## Remise du projet
 

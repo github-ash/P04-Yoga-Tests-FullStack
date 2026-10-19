@@ -116,7 +116,7 @@
     "angularBuild": "passed (existing 500 KB warning budget exceeded, below 1 MB error limit)",
     "eslint": "passed",
     "composeConfiguration": "passed",
-    "mysqlStartup": "not verified: local Docker daemon unresponsive",
+    "mysqlStartup": "verified 2026-10-19: MySQL and Spring Boot started; admin login, teacher lookup and session create/read/update/delete via real HTTP passed; temporary session removed; initialization rerun without duplicates",
     "backendHttp": "embedded server with H2 verified"
   },
   "commands": [
